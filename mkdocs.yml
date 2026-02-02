@@ -1,0 +1,29 @@
+site_name: Your Product Documentation
+docs_dir: user
+site_dir: site
+
+theme:
+  name: material
+  features:
+    - navigation.expand
+    - navigation.sections
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Overview: Overview.md
+  - Getting Started: Getting-Started.md
+  - How To Connect: How-To-Connect.md
+  - Subscriptions Participants: Subscriptions--Participants.md
+  - APIs: APIs.md
+  - EAS Client:
+      - Introduction: EAS-Client/Introduction.md
+      - Settings: EAS-Client/Settings.md
+      - Commands: EAS-Client/Commands.md
+      - Deploy To Azure: EAS-Client/Deploy-To-Azure.md
+      - System Requirements: EAS-Client/System-Requirements.md
+      - Changelog: EAS-Client/Changelog.md
