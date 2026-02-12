@@ -8,8 +8,8 @@ theme:
   name: material
   language: en
 
-  logo: ./assets/EASX_Logo_Light.svg
-  favicon: assets/favicon.ico
+  logo: ./EASX_Logo_Light.svg
+  favicon: ./favicon.ico
 
   font:
     text: Inter
