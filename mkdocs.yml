@@ -8,24 +8,24 @@ theme:
   name: material
   language: en
 
-  logo: ./EASX_Logo_Light.svg
-  favicon: ./favicon.ico
+  logo: ./assets/EASX_Logo_Light.svg
+  favicon: ./assets/EASX_Logo_Light.svg
 
   font:
     text: Inter
-    code: JetBrains Mono
+    code: Fira Code
 
   palette:
     - scheme: default
-      primary: custom
-      accent: custom
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
 
     - scheme: slate
-      primary: custom
-      accent: custom
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -42,6 +42,11 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/easx-community
 
 nav:
   - Overview: Overview.md

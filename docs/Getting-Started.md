@@ -14,11 +14,11 @@ To connect to EAS you will need to have an appropriate developer account and pro
 - You will find your new subscription on the [profile page](https://portal.easx.ch/profile), press the "Show" link next to the primary key and copy the key. You will need it later.
 - Generate a private and public key pair (RSA 2048-bit) and store as separate .pem files. This can be accomplished using any key generator, like [this online generator](https://travistidwell.com/jsencrypt/demo/) or by downloading the EAS Client from the [developer portal](https://portal.easx.ch/) and running `EASClient.exe --generatekeys eas` on the command line.
 - Before you can use your subscription to make calls to EAS, we will need to verify and configure it. There are two options to complete your registration:
-    1. Run your client locally using `EASClient --host` and navigate to [http://localhost:5000/register](http://localhost:5000/register) page. Input all required data and submit your registration using the UI;
-    2. Send an email to [support@easx.ch](mailto:support@easx.ch) with the following infos:
-        - username or email you used to sign up for a developer account
-        - UIDs ([Unternehmens-Identifikationsnummer](https://www.bfs.admin.ch/bfs/de/home/register/unternehmensregister/unternehmens-identifikationsnummer.html)) of the companies (participants) you need access for
-        - the public - _not private_ - key file (.pem) you generated in the previous step
+  1. Run your client locally using `EASClient --host` and navigate to [http://localhost:5000/register](http://localhost:5000/register) page. Input all required data and submit your registration using the UI;
+  2. Send an email to [support@easx.ch](mailto:support@easx.ch) with the following infos:
+     - username or email you used to sign up for a developer account
+     - UIDs ([Unternehmens-Identifikationsnummer](https://www.bfs.admin.ch/bfs/de/home/register/unternehmensregister/unternehmens-identifikationsnummer.html)) of the companies (participants) you need access for
+     - the public - _not private_ - key file (.pem) you generated in the previous step
 - We will verify your request, activate your subscription and get back to you providing a client certificate which you will need for connecting.
 
 # Installing and configuring EAS Client
@@ -32,39 +32,39 @@ Follow these steps to try it out:
 - Place the _private key file (.pem)_ you have generated also in this folder.
 - Add a configuration file named `EASClient.settings.json` next to the EASClient.exe in the same folder with the following content:
 
-  ```json
-  {
-    "ParticipantId": "<UID of default participant>",
-    "EasxSubscriptionKey": "<subscription key for EAS>",
-    "PrivateKeyPath": "<path to private key file>",
-    "CertificatePath": "<path to client certificate file>",
-    "CertificatePassword": "<password for client certificate>",
-    "HostUrl": "http://localhost:5000",
-    "Environment": "test"
-  }
-  ```
+```markdown
+{
+"ParticipantId": "<UID of default participant>",
+"EasxSubscriptionKey": "<subscription key for EAS>",
+"PrivateKeyPath": "<path to private key file>",
+"CertificatePath": "<path to client certificate file>",
+"CertificatePassword": "<password for client certificate>",
+"HostUrl": "http://localhost:5000",
+"Environment": "test"
+}
+```
 
-  Replacing the following values:
+Replacing the following values:
 
-  - `<UID of default participant>`: The UID for the participant you will be retrieving or sending documents by default with on this EAS Client.
-  - `<subscription key for EAS>`: The primary key for your subscription. Retrieve it from your [profile page](https://portal.easx.ch/profile).
-  - `<path to private key>`: Path to the private key file (.pem) which you generated previously.
-  - `<path to client certificate file>`: Path to the client certificate file which was provided to you by the EAS team.
-  - `<password for client certificate>`: Password for the client certificate file configured above.
+- `<UID of default participant>`: The UID for the participant you will be retrieving or sending documents by default with on this EAS Client.
+- `<subscription key for EAS>`: The primary key for your subscription. Retrieve it from your [profile page](https://portal.easx.ch/profile).
+- `<path to private key>`: Path to the private key file (.pem) which you generated previously.
+- `<path to client certificate file>`: Path to the client certificate file which was provided to you by the EAS team.
+- `<password for client certificate>`: Password for the client certificate file configured above.
 
-  Example:
+Example:
 
-  ```json
-  {​​​​​​​
-    "ParticipantId": "CHE113558341",
-    "EasxSubscriptionKey": "7897eb62e25d456e9d37f7c3e10774e1",
-    "PrivateKeyPath": "eas-private-key.pem",
-    "CertificatePath": "easx-client.cer",
-    "CertificatePassword": "RVKGlVGMhxvSAeJ8",
-    "HostUrl": "http://localhost:5000",
-    "Environment": "test"
-  }​​​​​​​
-  ```
+```json
+{​​​​​​​
+  "ParticipantId": "CHE113558341",
+  "EasxSubscriptionKey": "7897eb62e25d456e9d37f7c3e10774e1",
+  "PrivateKeyPath": "eas-private-key.pem",
+  "CertificatePath": "easx-client.cer",
+  "CertificatePassword": "RVKGlVGMhxvSAeJ8",
+  "HostUrl": "http://localhost:5000",
+  "Environment": "test"
+}​​​​​​​
+```
 
 - To test all is configured fine, run `EASClient.exe --list-in` on the command line. If this doesn't return any errors you'll know all is fine.
 - Now run `EASClient.exe --host` to start the locally configured and hosted EAS API.
