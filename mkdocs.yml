@@ -3,6 +3,7 @@ site_url: https://easx-community.github.io/easx-docs/
 
 use_directory_urls: true
 use_relative_links: true
+docs_dir: eas-documentation
 
 theme:
   name: material
@@ -49,7 +50,7 @@ extra:
       link: https://github.com/easx-community
 
 nav:
-  - Overview: Overview.md
+  - Overview: dev\Overview.md
   - Getting Started: Getting-Started.md
   - How To Connect: How-To-Connect.md
   - Subscriptions Participants: Subscriptions--Participants.md
