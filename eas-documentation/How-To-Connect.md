@@ -1,4 +1,4 @@
-﻿First of all, to connect to EAS you will need to have an appropriate developer account and product subscription. Refer to the [Overview](overview) for more details.
+First of all, to connect to EASX you will need to have an appropriate developer account and product subscription. Refer to the [Getting Started](Getting-Started.md) for more details.
 
 There are multiple options of connecting to EAS.
 
@@ -19,7 +19,7 @@ This method requires you to attach a few security related headers and specify a 
 This option is the **prefered option** suggested for almost all cases.
 
 Using this approach a full end-to-end encryption can be utilized, ensuring highest levels of security. It requires an installation of a single-file application
-or a docker image, provided by EAS. Updates and improvements of the EAS Client are maintained by us. This is our suggested option, balancing simplicity and security. EAS Client silently handles signing, verification, encryption/decryption and version migrations of documents in your environment.
+or a docker image, provided by EAS (see [Docker Usage and Configuration](EAS-Client/Docker.md) for details). Updates and improvements of the EAS Client are maintained by us. This is our suggested option, balancing simplicity and security. EAS Client silently handles signing, verification, encryption/decryption and version migrations of documents in your environment.
 
 ## 3. Implementing the EAS Client in your application
 

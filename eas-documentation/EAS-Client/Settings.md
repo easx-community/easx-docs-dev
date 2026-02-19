@@ -58,7 +58,7 @@ All paths can be relative, absolute, or in any other format as long as it's supp
 | CertificateContent      | null                  | base64string           | No       | This param is used for Docker Container. You should provide it as reference to Key Vault in Azure|
 | CertificatePassword     | null                  | qwerty123!             | No       | If the pfx file with a client certificate is password protected, specify it here. Otherwise, leave this field as null.                                |
 | HostUrl                 | http://localhost:5000 | http://localhost:5050  | No       | A URL where client GUI and Swagger should be located if the client was launched in a host mode. It can be any valid URL.                              |
-| Environment             | test                  |                        | No       | Environment that is used by the EAS Client. Right now, only "test" is supported. There will be additional values like "prod" in future.               |
+| Environment             | test                  |                        | No       | Environment that is used by the EAS Client. Set to "test" for testing or "prod" for production environments.                                          |
 | ProxyHost               | null                  | http://proxy.local     | No       | Proxy host address in case your system requires proxy to access internet.                                                                             |
 | ProxyPort               | null                  | 4444                   | No       | The port your proxy host is running on.                                                                                                               |
 | ProxyUsername           | null                  |                        | No       | The username for the configured proxy.                                                                                                                |
@@ -68,8 +68,17 @@ All paths can be relative, absolute, or in any other format as long as it's supp
 | Http2Support            | true                  |                        | No       | Specifies if HTTP2 should be enabled. Can be useful in advanced proxy configuration.                                                                  |
 | Http2UnencryptedSupport | false                 |                        | No       | Specifies if HTTP2 can be used without encryption. Can be useful in advanced proxy configuration.                                                     |
 | OverrideParticipant     | false                 | ```{ "CHE_MULTIPLE_5": { "PrivateKeyPath": "CHE_MULTIPLE_5-private_key.pem", "CertificatePath": "CHE_MULTIPLE_5-client_certificate (1).p12", "EasxSubscriptionKey": "0a9f40f2e285490d8e1ccd3f2fd412da"}}  ```                   | No       | Configure different keys, certificates or subscriptions for accessible participants|
-| DocumentCacheMode | Disabled                 |                        | No       | The document cache mode. Possible values: 'Disabled' - The cache is not working, 'EnabledWithoutPrefetch' - The cache working without a job in parallel mode, 'Enabled' - the cache is working.     
-| SyncDocumentsIntervalMinutes | 5                 |                        | No       | The cache document task execution interval in minutes    
+| DocumentCacheMode       | Disabled              |                        | No       | The document cache mode. Possible values: <ul><li>'Disabled' - The cache is not working</li><li>'EnabledWithoutPrefetch' - The cache working without a job in parallel mode</li><li>'Enabled' - the cache is working</li><ul>     
+| SyncDocumentsIntervalMinutes | 5                |                        | No       | The cache document task execution interval in minutes    
+| TransparencyLogsCacheTimeout | 1800             |                        | No       | Specifies the cache expiration time (in seconds) for transparency log entries. Default is 1800 seconds
+| TransparencyLogsLocalFileName | publicKeyStorage.json                 |  | No       | Specifies the name of the local file used to store transparency log records (e.g. public keys).    
+| TransparencyLogsVerificationIsEnabled | true    |                        | No       | Indicates whether verification of entries against the transparency log is enabled    
+| TransparencyLogsStoreParticipantIsDisabled | false  |                    | No       | Indicates whether storing all received user public keys into the local JSON file is disabled
+| TransparencyLogsBatchSize | 5                   |                        | No       | Defines the number of records retrieved from the Directory Service in a single request    
+| TransparencyLogsMaxConcurrency | 30                 |                    | No       | Specifies the maximum number of requests to the Directory Service that can be executed in parallel    
+| CachePath | .cache                 |                    | No       |Path to the folder where all cached documents are stored. For Docker containers, it is not recommended to change this path since it is persisted in the `/Data` volume.   
+| LoggedKeysPath | LoggedKeys                 |                    | No       | Path to the folder where the JSON file with retrieved public keys is stored. For Docker containers, it is not recommended to change this path since it is persisted in the `/Data` volume.   
+| LogsPath | Logs                 |                    | No       | Path to the folder where application logs are stored. For Docker containers, be cautious when changing this path, as logs are persisted in the `/Logs` volume.   
 
 
 **Advanced logging configuration**

@@ -22,4 +22,4 @@ standardised business identification number (UID - Unternehmens-Identifikationsn
 
 Multiple subscriptions can be mapped to a participant. This allows multiple systems to handle documents and other functionalities of a participant.
 
-Every participant has a *public key* that is used to encrypt documents sent to this participant and verify signatures for documents received from this participant. The mtaching *private key* is only available to the participant and is used by the participant to decrypt received documents and sign sent documents.
+Every participant has a *public key* that is used to encrypt documents sent to this participant and verify signatures for documents received from this participant. The matching *private key* is only available to the participant and is used by the participant to decrypt received documents and sign sent documents.

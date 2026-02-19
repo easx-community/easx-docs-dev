@@ -118,17 +118,22 @@ Example file:
 }
 ```
 
-**--generatekeys "fileprefix"**
+**--generatekeys "fileprefix" --keysize [<3072|4096>]**
 
-Generate RSA2048 private/public keys. The command will store them as files that start with `fileprefix` parameter, like `fileprefix-private-key.pem` and `fileprefix-public-key.pem`. They can later be used while configuring EAS Client.
+Generate RSA key pairs (**3072-bit by default, 4096-bit available**).  
+The `--keysize` option is optional and allows specifying the key size.  
+The command will generate two `.pem` files using the provided `fileprefix`:
+- `fileprefix-private-key.pem` (**private key**)  
+- `fileprefix-public-key.pem` (**public key**)  
 
-Example output:
+These keys can later be used while configuring the EAS Client.
 
+### Example Output:**
 ```txt
-Generating private/public key pair files
-Private key file sample-private-key.pem generated
-Public key file sample-public-key.pem generated
-All Done
+ Generating 3072-bit private/public key pair...
+ Private key file sample-private-key.pem generated
+ Public key file sample-public-key.pem generated
+ All Done
 ```
 
 Example private key:
@@ -194,7 +199,7 @@ Use one of the following arguments:
  --send "path" : Send all files from the specified folder
  --receive "path" : Receive all incoming files to the specified folder.
  --get-receipts "path" : Get all receipts to the specified folder.
- --generatekeys "fileprefix" : Generate private/public key files.
+ --generatekeys [fileprefix] --keySize [keySize] : Generate 3072bit (default) or 4096bit private/public key files.
  --host : Run the app in hosted mode.
 
 Navigate to the following URL for more information: https://docs.easx.ch

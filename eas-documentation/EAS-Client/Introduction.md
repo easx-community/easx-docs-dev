@@ -1,49 +1,70 @@
-The EAS Client encapsulates all important functionalities for accessing EASX. It provides handling
-all the security features and compatibility features needed to ensure an end-to-end encrpytion.
+# EAS Client Overview
 
-# Deployment
+The **EAS Client** encapsulates essential functionalities for accessing **EASX**, including robust handling of security and compatibility features to ensure end-to-end encryption.
 
-The EAS Client is provided in deployment in two different ways:
+## Deployment Options
 
-## Executable file
-The binary executable file is available for download on the [EASX portal](https://portal.easx.ch) when
-signed in. Different variants for Windows, Linux or MacOS are provided.
+The EAS Client is available in two deployment options:
 
-The EAS Client is a self-contained, single-file application and no other dependencies need to be deployed.
-It can be placed in a directory and configured as explained in [settings](Settings.md).
+### 1. Executable File
 
-## Docker image
+The binary executable file can be downloaded from the [EASX portal](https://portal.easx.ch) upon signing in. Versions are available for Windows, Linux, and macOS.
 
-The EAS Client is also provided as a [docker image](https://hub.docker.com/r/easx/client) on the docker hub.
-This allows easily deploying and managing access to EASX. Configuration can be easily done and allows
-using a secure key repository (i.e. Azure Key Vault).
+The EAS Client is a self-contained, single-file application requiring no additional dependencies. It can be placed in a directory and configured as explained in [Settings](Settings.md).
 
-For an example of using the EAS Client as a docker instance deployed as a Azure App Service, see [Deploy to Azure](Deploy-To-Azure.md).
+### 2. Docker Image
 
-# Functionality
+The EAS Client is also available as a [Docker image](https://hub.docker.com/r/easx/client) on Docker Hub, allowing for easy deployment and management of access to EASX. Configuration options support the use of secure key repositories (e.g., Azure Key Vault).
 
-After setting up the EAS Client (both Windows, Linux and MacOS are supported), you can utilize it in one of the following ways:
+See [Docker Usage and Configuration](Docker.md) for detailed instructions, available tags, volumes, and environment variable setup.
 
-1. Command line scripts.
+For an example of using the EAS Client as a Docker instance deployed on Azure App Service, see [Deploy to Azure](Deploy-To-Azure.md).
 
-Find a list of all supported commands documented under [EAS Client commands](Commands.md). For example, to get all incoming documents into a folder, you will have to run the client like `EASClient.exe --receive "incoming folder"`. The client will also handle all additional actions, like sending receipts, automatically.
+## Functionality
 
-To send a document, you'll have to copy it into the specified folder, and run the send command `EASClient.exe --send "outgoing folder"`.
+Once set up, the EAS Client supports multiple interaction methods:
 
-Just like in direct approach, it is possible to create a simple batch/shell script and configure it to run every few hours using Windows Task Scheduler or a cron job. With just a few simple commands, you will get the highest level of security.
+### 1. Client API Requests
 
-Note: Command line scripts are only available when the EAS Client is deployed as an executable file, not docker instance.
+This is the primary approach to using of the EAS Client. This allows applications to integrate into the EASX platform using the EAS API without having to implement encryption, signing, and validation themselves. When the EAS Client is run in host mode, it launches a local instance of the EAS API that handles security. To run the EAS Client in host mode:
 
-1. Client API request.
+`EASClient.exe --host`
 
-In case you'd like to integrate EAS API into your application, but you don't want to implement encryption, signing and validations yourself, consider using this approach. After running EAS Client in host mode, it will launch a local instance of EAS API that does not require any security.
+In this mode the EAS Client provides a RESTful API and you can send simple, unencrypted HTTP requests to the local client URL. The EAS Client will validate the request and handle payload encryption, signature generation, attaching subscription headers and client certificate, specifying default UID and securly communicating with the EASX server. Upon receiving a response, it will validate the signature, decrypt the payload, and return the decrypted response.
 
-This way, you will send a simple unencrypted http requests to the local client URL. The client will then validate your request, generate signature, encrypt the payload, attach required subscription headers, attach the client certificate, specify default UID and finally send the request to remote EAS API. Upon receiving the response, the client will validate signature, decrypt the payload and return the decrypted response.
+To ease the implementation into your application an OpenAPI Specification is available.
 
-Just like in direct approach, it is possible to create a simple batch/shell script and configure it to run every few hours using Windows Task Scheduler or a cron job. And in case you'd like to integrate it in your application, there is an OpenAPI Specification to facilitate the process.
+### 2. Client GUI
 
-3. Client GUI
+For manually exchanging documents, viewing logs, configuring EAS Client settings, or experimenting with the local API, consider using the GUI. When running the EAS Client in host mode (`EASClient.exe --host`), it launches a local instance of the EAS Client GUI (next to the Client API) accessible from a browser.
 
-In case you'd like to perform document exchange manually, view the logs, change EAS Client settings or experiment with local API, consider using this approach. After running EAS Client in host mode, it will launch a local instance of EAS client GUI. It allows you to access all the features of EAS Client from your browser. After navigating to a specified local URL, you will be able to send, view and manage documents, receipts, access client directory, logs, etc. GUI also includes Swagger and Open API Specification, so it can be used to try out the local API.
+The GUI allows you to send, view, and manage documents and receipts, access the client directory, view logs, and more. It also includes Swagger and an OpenAPI Specification, making it easy to try out the local API.
 
-This approach might work for you in case you would like to perform all the actions manually. For example, you can just create a shortcut to launch EAS Client in hosted mode. Then, you'll just launch the shortcut, open an Incoming Documents web page in your browser, and download a document without having to deal with encryptions or commands whatsoever.
+This option is ideal for users who prefer a manual approach. For instance, you can create a shortcut to launch the EAS Client in hosted mode, open the Incoming Documents page in your browser, and download a document without needing to manage encryption or command-line instructions.
+For details on using the Transparency Logs Page, see [Transparency Logs Page (UI Usage)](Transparency-Logs-UI.md).
+
+### 3. Command-Line Scripts
+
+A full list of supported commands is documented under [EAS Client Commands](Commands.md). For example:
+
+- To receive all incoming documents into a specified folder, run:
+
+  `EASClient.exe --receive "incoming folder"`
+
+  This command also handles additional tasks such as sending receipts.
+
+- To send a document, copy it into the specified folder and run:
+
+  `EASClient.exe --send "outgoing folder"`
+
+You can automate these commands using batch/shell scripts configured to run periodically with Windows Task Scheduler or a cron job.
+
+> **Note**: Command-line scripts are only available when the EAS Client is deployed as an executable file, not as a Docker instance.
+
+## Caching and Filtering Incoming Documents
+
+The EAS Client provides options for local caching of incoming documents, allowing you to retrieve documents from the server and store them locally for later processing. Additionally, it provides an extension to the EASX Hub API to retrieve a filtered list of FZL documents using an XPath expression. This feature is useful when documents do not need to be processed immediately upon retrieval. For more details, see [Filtering Using XPath](Filter-Using-XPath.md).
+
+## Retrieving Incoming Documents as PDFs
+
+The EAS Client also supports retrieving incoming documents as PDFs, which is beneficial for presenting data in a human-readable format. For more information, see [Retrieving as PDF](Retrieve-PDF.md).
