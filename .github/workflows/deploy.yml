@@ -41,3 +41,4 @@ jobs:
         with:
           personal_token: ${{ secrets.GH_PAGES_PAT }}
           publish_dir: ./site
+          force_orphan: true

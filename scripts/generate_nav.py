@@ -32,6 +32,7 @@ for order_file in base_path.rglob(".order"):
 with open("mkdocs.base.yml") as f:
     config = yaml.safe_load(f)
 
+config["docs_dir"] = str(base_path)
 config["nav"] = nav
 
 # Save final mkdocs.yml
