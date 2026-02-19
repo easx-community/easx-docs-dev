@@ -51,7 +51,7 @@ def process_order(folder: Path):
         if subfolder.is_dir():
             sub_nav = process_order(subfolder)
             if sub_nav:
-                section_title = subfolder.name.replace("-", " ").title()
+                section_title = subfolder.name.replace("-", " ")
                 nav.append({section_title: sub_nav})
 
     return nav
