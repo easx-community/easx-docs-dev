@@ -135,28 +135,6 @@ html {
 }
 
 /* ================================
-   Dev Badge Overlay
-================================ */
-
-.md-header-nav .md-logo {
-  position: relative; /* make it a positioning context */
-}
-
-.md-header-nav .md-logo::after {
-  content: "";
-  position: absolute;
-  top: -5px; /* adjust vertical position */
-  right: -5px; /* adjust horizontal position */
-  width: 40px; /* badge size */
-  height: 40px;
-  background-image: url("/assets/dev-stamp.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  pointer-events: none; /* keep logo clickable */
-  z-index: 10;
-}
-
-/* ================================
    Footer
 ================================ */
 
