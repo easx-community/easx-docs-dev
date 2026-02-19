@@ -10,35 +10,45 @@ if not base_path.exists():
     print(f"ERROR: Folder {base_path} does not exist")
     sys.exit(1)
 
+order_file = base_path / ".order"
+if not order_file.exists():
+    print(f"ERROR: {order_file} not found")
+    sys.exit(1)
+
 nav = []
 
-# Recursively find all .order files
-for order_file in sorted(base_path.rglob(".order")):
-    folder = order_file.parent
-    items = []
-    with order_file.open() as f:
-        items = [line.strip() for line in f if line.strip()]
+with order_file.open() as f:
+    lines = [line.strip() for line in f if line.strip()]
 
-    for i, item in enumerate(items):
-        file_path = folder / item
-        if not file_path.exists():
-            print(f"WARNING: File {file_path} listed in {order_file} does not exist")
-            continue
+# First file becomes index.md
+for i, line in enumerate(lines):
+    if '|' in line:
+        filename, title = line.split('|', 1)
+    else:
+        filename = line
+        title = Path(line).stem.replace("-", " ").title()
 
-        # Relative path for nav
-        rel_path = file_path.relative_to(base_path)
+    file_path = base_path / filename
 
-        if i == 0:
-            # First file becomes the landing page
-            index_path = base_path / "index.md"
-            if not index_path.exists():
-                shutil.copy(file_path, index_path)
-            # Optionally, skip adding to nav or include it
-            title = file_path.stem.replace("-", " ").title()
-            nav.append({title: str(rel_path).replace("\\", "/")})
-        else:
-            title = file_path.stem.replace("-", " ").title()
-            nav.append({title: str(rel_path).replace("\\", "/")})
+    if not file_path.exists():
+        print(f"WARNING: File {file_path} listed in .order does not exist")
+        continue
+
+    # Skip 404.md
+    if file_path.name.lower() == "404.md":
+        continue
+
+    rel_path = file_path.relative_to(base_path).as_posix()
+
+    if i == 0:
+        # Landing page
+        index_path = base_path / "index.md"
+        if not index_path.exists():
+            shutil.copy(file_path, index_path)
+        # Optionally include it in nav
+        nav.append({title: rel_path})
+    else:
+        nav.append({title: rel_path})
 
 # Load base config
 with open("mkdocs.base.yml") as f:
