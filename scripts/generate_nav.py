@@ -32,7 +32,7 @@ def process_order(folder: Path):
             if file_path.name.lower() == "404.md":
                 continue
 
-            title = Path(filename).stem.replace("-", " ").title()
+            title = Path(filename).stem.replace("-", " ")
             rel_path = file_path.relative_to(base_path).as_posix()
 
             # First file in ROOT becomes landing page AND nav item

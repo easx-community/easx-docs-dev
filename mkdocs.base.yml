@@ -9,8 +9,8 @@ theme:
   name: material
   language: en
 
-  logo: ./assets/EASX_Logo_Light.svg
-  favicon: ./assets/EASX_Logo_Light.svg
+  logo: /assets/EASX_Logo_Light.svg
+  favicon: /assets/EASX_Logo_Light.svg
 
   font:
     text: Inter
@@ -42,7 +42,7 @@ theme:
     - content.code.copy
 
 extra_css:
-  - stylesheets/extra.css
+  - /stylesheets/extra.css
 
 extra:
   social:
