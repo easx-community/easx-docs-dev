@@ -22,19 +22,18 @@ else:
 
     # First file becomes index.md
     for i, line in enumerate(lines):
-        if '|' in line:
-            filename, title = line.split('|', 1)
-        else:
-            filename = line
-            title = Path(line).stem.replace("-", " ").title()
+        filename = line
+        title = Path(line).stem.replace("-", " ").title()
 
+        # Default extension .md
         file_path = base_path / filename
+        if not file_path.exists():
+            file_path = base_path / f"{filename}.md"
 
         if not file_path.exists():
             print(f"WARNING: File {file_path} listed in .order does not exist")
             continue
 
-        # Skip 404.md
         if file_path.name.lower() == "404.md":
             continue
 
@@ -43,8 +42,7 @@ else:
         if i == 0:
             # Landing page
             index_path = base_path / "index.md"
-            if not index_path.exists():
-                shutil.copy(file_path, index_path)
+            shutil.copy(file_path, index_path)
             nav.append({title: rel_path})
         else:
             nav.append({title: rel_path})
