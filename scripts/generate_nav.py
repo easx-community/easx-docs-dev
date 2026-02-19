@@ -1,6 +1,7 @@
 import yaml
 from pathlib import Path
 import sys
+import shutil
 
 env = sys.argv[1]  # dev / test / prod
 base_path = Path("eas-documentation") / env
@@ -12,21 +13,32 @@ if not base_path.exists():
 nav = []
 
 # Recursively find all .order files
-for order_file in base_path.rglob(".order"):
+for order_file in sorted(base_path.rglob(".order")):
     folder = order_file.parent
     items = []
     with order_file.open() as f:
         items = [line.strip() for line in f if line.strip()]
 
-    for item in items:
+    for i, item in enumerate(items):
         file_path = folder / item
-        if file_path.exists():
-            # Compute relative path from base_path parent for nav
-            rel_path = file_path.relative_to(base_path)
+        if not file_path.exists():
+            print(f"WARNING: File {file_path} listed in {order_file} does not exist")
+            continue
+
+        # Relative path for nav
+        rel_path = file_path.relative_to(base_path)
+
+        if i == 0:
+            # First file becomes the landing page
+            index_path = base_path / "index.md"
+            if not index_path.exists():
+                shutil.copy(file_path, index_path)
+            # Optionally, skip adding to nav or include it
             title = file_path.stem.replace("-", " ").title()
             nav.append({title: str(rel_path).replace("\\", "/")})
         else:
-            print(f"WARNING: File {file_path} listed in {order_file} does not exist")
+            title = file_path.stem.replace("-", " ").title()
+            nav.append({title: str(rel_path).replace("\\", "/")})
 
 # Load base config
 with open("mkdocs.base.yml") as f:
