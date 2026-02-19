@@ -13,7 +13,6 @@ def process_order(folder: Path):
     nav = []
     order_file = folder / ".order"
 
-    # Process files in this folder according to .order
     if order_file.exists():
         with order_file.open() as f:
             lines = [line.strip() for line in f if line.strip()]
@@ -33,16 +32,16 @@ def process_order(folder: Path):
             if file_path.name.lower() == "404.md":
                 continue
 
-            # Create title
             title = Path(filename).stem.replace("-", " ").title()
-
-            # Compute relative path for MkDocs
             rel_path = file_path.relative_to(base_path).as_posix()
 
-            # First file in ROOT becomes landing page
+            # First file in ROOT becomes landing page AND nav item
             if folder == base_path and index == 0:
                 index_path = base_path / "index.md"
                 shutil.copy(file_path, index_path)
+
+                # Add index.md to nav
+                nav.append({title: "index.md"})
                 continue
 
             nav.append({title: rel_path})
