@@ -22,7 +22,7 @@ for order_file in base_path.rglob(".order"):
         file_path = folder / item
         if file_path.exists():
             # Compute relative path from base_path parent for nav
-            rel_path = file_path.relative_to(base_path.parent)
+            rel_path = file_path.relative_to(base_path)
             title = file_path.stem.replace("-", " ").title()
             nav.append({title: str(rel_path).replace("\\", "/")})
         else:

@@ -48,17 +48,3 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/easx-community
-
-nav:
-  - Overview: dev\Overview.md
-  - Getting Started: Getting-Started.md
-  - How To Connect: How-To-Connect.md
-  - Subscriptions Participants: Subscriptions--Participants.md
-  - APIs: APIs.md
-  - EAS Client:
-      - Introduction: EAS-Client/Introduction.md
-      - Settings: EAS-Client/Settings.md
-      - Commands: EAS-Client/Commands.md
-      - Deploy To Azure: EAS-Client/Deploy-To-Azure.md
-      - System Requirements: EAS-Client/System-Requirements.md
-      - Changelog: EAS-Client/Changelog.md
