@@ -1,51 +1,64 @@
 import yaml
 from pathlib import Path
-import sys
 import shutil
 
-env = sys.argv[1]  # dev / test / prod
-base_path = Path("eas-documentation") / env
+# Root documentation folder
+base_path = Path("eas-documentation")
 
-# If the environment folder doesn't exist, skip gracefully
 if not base_path.exists():
-    print(f"WARNING: Folder {base_path} does not exist, skipping {env}")
-    sys.exit(0)
+    print(f"ERROR: Folder {base_path} does not exist")
+    exit(1)
 
-order_file = base_path / ".order"
-if not order_file.exists():
-    print(f"WARNING: .order file not found in {base_path}, skipping nav generation")
+def process_order(folder: Path):
     nav = []
-else:
-    nav = []
-    with order_file.open() as f:
-        lines = [line.strip() for line in f if line.strip()]
+    order_file = folder / ".order"
 
-    # First file becomes index.md
-    for i, line in enumerate(lines):
-        filename = line
-        title = Path(line).stem.replace("-", " ").title()
+    # Process files in this folder according to .order
+    if order_file.exists():
+        with order_file.open() as f:
+            lines = [line.strip() for line in f if line.strip()]
 
-        # Default extension .md
-        file_path = base_path / filename
-        if not file_path.exists():
-            file_path = base_path / f"{filename}.md"
+        for index, line in enumerate(lines):
+            filename = line
 
-        if not file_path.exists():
-            print(f"WARNING: File {file_path} listed in .order does not exist")
-            continue
+            # Add .md automatically if missing
+            file_path = folder / filename
+            if not file_path.exists() and not filename.endswith(".md"):
+                file_path = folder / f"{filename}.md"
 
-        if file_path.name.lower() == "404.md":
-            continue
+            if not file_path.exists():
+                print(f"WARNING: {file_path} listed in {order_file} does not exist")
+                continue
 
-        rel_path = file_path.relative_to(base_path).as_posix()
+            if file_path.name.lower() == "404.md":
+                continue
 
-        if i == 0:
-            # Landing page
-            index_path = base_path / "index.md"
-            shutil.copy(file_path, index_path)
+            # Create title
+            title = Path(filename).stem.replace("-", " ").title()
+
+            # Compute relative path for MkDocs
+            rel_path = file_path.relative_to(base_path).as_posix()
+
+            # First file in ROOT becomes landing page
+            if folder == base_path and index == 0:
+                index_path = base_path / "index.md"
+                shutil.copy(file_path, index_path)
+                continue
+
             nav.append({title: rel_path})
-        else:
-            nav.append({title: rel_path})
+
+    # Process subfolders recursively
+    for subfolder in sorted(folder.iterdir()):
+        if subfolder.is_dir():
+            sub_nav = process_order(subfolder)
+            if sub_nav:
+                section_title = subfolder.name.replace("-", " ").title()
+                nav.append({section_title: sub_nav})
+
+    return nav
+
+# Generate navigation
+nav = process_order(base_path)
 
 # Load base config
 with open("mkdocs.base.yml") as f:
@@ -54,8 +67,8 @@ with open("mkdocs.base.yml") as f:
 config["docs_dir"] = str(base_path)
 config["nav"] = nav
 
-# Save final mkdocs.yml
+# Write final mkdocs.yml
 with open("mkdocs.yml", "w") as f:
     yaml.dump(config, f, sort_keys=False)
 
-print(f"Generated nav for {env} with {len(nav)} entries")
+print("Navigation successfully generated.")

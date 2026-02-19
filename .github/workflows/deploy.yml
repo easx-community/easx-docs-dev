@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Deploy Dev Docs
 
 on:
   push:
@@ -12,29 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Setup Python
         run: pip install mkdocs-material pyyaml
 
-      # --- DEV ---
-      - name: Generate DEV nav
+      - name: Generate nav
         run: python scripts/generate_nav.py dev
 
-      - name: Build DEV
-        run: mkdocs build --site-dir site/dev
-
-      # --- TEST ---
-      - name: Generate TEST nav
-        run: python scripts/generate_nav.py test
-
-      - name: Build TEST
-        run: mkdocs build --site-dir site/test
-
-      # --- PROD ---
-      - name: Generate PROD nav
-        run: python scripts/generate_nav.py prod
-
-      - name: Build PROD
-        run: mkdocs build --site-dir site/prod
+      - name: Build site
+        run: mkdocs build --site-dir site/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
