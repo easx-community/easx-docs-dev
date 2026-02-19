@@ -6,49 +6,48 @@ import shutil
 env = sys.argv[1]  # dev / test / prod
 base_path = Path("eas-documentation") / env
 
+# If the environment folder doesn't exist, skip gracefully
 if not base_path.exists():
-    print(f"ERROR: Folder {base_path} does not exist")
-    sys.exit(1)
+    print(f"WARNING: Folder {base_path} does not exist, skipping {env}")
+    sys.exit(0)
 
 order_file = base_path / ".order"
 if not order_file.exists():
-    print(f"ERROR: {order_file} not found")
-    sys.exit(1)
+    print(f"WARNING: .order file not found in {base_path}, skipping nav generation")
+    nav = []
+else:
+    nav = []
+    with order_file.open() as f:
+        lines = [line.strip() for line in f if line.strip()]
 
-nav = []
+    # First file becomes index.md
+    for i, line in enumerate(lines):
+        if '|' in line:
+            filename, title = line.split('|', 1)
+        else:
+            filename = line
+            title = Path(line).stem.replace("-", " ").title()
 
-with order_file.open() as f:
-    lines = [line.strip() for line in f if line.strip()]
+        file_path = base_path / filename
 
-# First file becomes index.md
-for i, line in enumerate(lines):
-    if '|' in line:
-        filename, title = line.split('|', 1)
-    else:
-        filename = line
-        title = Path(line).stem.replace("-", " ").title()
+        if not file_path.exists():
+            print(f"WARNING: File {file_path} listed in .order does not exist")
+            continue
 
-    file_path = base_path / filename
+        # Skip 404.md
+        if file_path.name.lower() == "404.md":
+            continue
 
-    if not file_path.exists():
-        print(f"WARNING: File {file_path} listed in .order does not exist")
-        continue
+        rel_path = file_path.relative_to(base_path).as_posix()
 
-    # Skip 404.md
-    if file_path.name.lower() == "404.md":
-        continue
-
-    rel_path = file_path.relative_to(base_path).as_posix()
-
-    if i == 0:
-        # Landing page
-        index_path = base_path / "index.md"
-        if not index_path.exists():
-            shutil.copy(file_path, index_path)
-        # Optionally include it in nav
-        nav.append({title: rel_path})
-    else:
-        nav.append({title: rel_path})
+        if i == 0:
+            # Landing page
+            index_path = base_path / "index.md"
+            if not index_path.exists():
+                shutil.copy(file_path, index_path)
+            nav.append({title: rel_path})
+        else:
+            nav.append({title: rel_path})
 
 # Load base config
 with open("mkdocs.base.yml") as f:
