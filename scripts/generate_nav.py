@@ -12,47 +12,56 @@ if not base_path.exists():
 def process_order(folder: Path):
     nav = []
     order_file = folder / ".order"
+    processed_folders = set()
 
     if order_file.exists():
         with order_file.open() as f:
             lines = [line.strip() for line in f if line.strip()]
 
         for index, line in enumerate(lines):
-            filename = line
+            entry_path = folder / line
 
-            # Add .md automatically if missing
-            file_path = folder / filename
-            if not file_path.exists() and not filename.endswith(".md"):
-                file_path = folder / f"{filename}.md"
+            # Auto-add .md if missing
+            if not entry_path.exists() and not line.endswith(".md"):
+                entry_path = folder / f"{line}.md"
 
-            if not file_path.exists():
-                print(f"WARNING: {file_path} listed in {order_file} does not exist")
+            if not entry_path.exists():
+                print(f"WARNING: {entry_path} listed in {order_file} does not exist")
                 continue
 
-            if file_path.name.lower() == "404.md":
+            # Skip 404
+            if entry_path.name.lower() == "404.md":
                 continue
 
-            title = Path(filename).stem.replace("-", " ")
-            rel_path = file_path.relative_to(base_path).as_posix()
+            # If entry is a directory → recurse immediately
+            if entry_path.is_dir():
+                sub_nav = process_order(entry_path)
+                if sub_nav:
+                    title = entry_path.name.replace("-", " ")
+                    nav.append({title: sub_nav})
+                processed_folders.add(entry_path.name)
+                continue
 
-            # First file in ROOT becomes landing page AND nav item
+            # Otherwise it's a file
+            title = entry_path.stem.replace("-", " ")
+            rel_path = entry_path.relative_to(base_path).as_posix()
+
+            # Root first file becomes index
             if folder == base_path and index == 0:
                 index_path = base_path / "index.md"
-                shutil.copy(file_path, index_path)
-
-                # Add index.md to nav
+                shutil.copy(entry_path, index_path)
                 nav.append({title: "index.md"})
                 continue
 
             nav.append({title: rel_path})
 
-    # Process subfolders recursively
+    # Process remaining subfolders not listed in .order
     for subfolder in sorted(folder.iterdir()):
-        if subfolder.is_dir():
+        if subfolder.is_dir() and subfolder.name not in processed_folders:
             sub_nav = process_order(subfolder)
             if sub_nav:
-                section_title = subfolder.name.replace("-", " ")
-                nav.append({section_title: sub_nav})
+                title = subfolder.name.replace("-", " ")
+                nav.append({title: sub_nav})
 
     return nav
 
