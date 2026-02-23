@@ -1,5 +1,7 @@
 site_name: EAS Documentation
 site_url: https://easx-community.github.io/easx-docs/
+repo_url: https://github.com/easx-community/easx-docs-dev
+repo_name: easx-docs-dev
 
 use_directory_urls: true
 use_relative_links: true
@@ -44,6 +46,8 @@ theme:
     - search.highlight
     - search.suggest
     - content.code.copy
+    - content.action.edit
+    - content.action.view
 
 extra_css:
   - stylesheets/extra.css
